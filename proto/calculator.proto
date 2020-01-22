@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package calculatorpb;
+
+service Calculator {
+    rpc Add(Input) returns (Answer) {}
+    rpc Subtract(Input) returns (Answer) {}
+}
+
+message Answer {
+    double value = 1;
+}
+
+message Input {
+    repeated double values = 1;
+}
