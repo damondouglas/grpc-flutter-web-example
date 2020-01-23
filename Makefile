@@ -14,8 +14,13 @@ build: ## Build via skaffold with TAG
 dev: ## Run skaffold dev with TAG
 	skaffold dev
 
+deploy: ## Deploy skaffold with TAG
+	skaffold run
+
 certificates: ## Generate mock certificates
-	openssl req -nodes -x509 -newkey rsa:4096 -keyout certs/cert.key -out certs/cert.crt -days 365 -subj "/C=US/ST=WA/L=Seattle/O=Company/OU=Enterprise/CN=localhost"
+	kubectl delete secret envoy-certs; \
+	openssl req -nodes -x509 -newkey rsa:4096 -keyout certs/cert.key -out certs/cert.crt -days 365 -subj "/C=US/ST=WA/L=Seattle/O=Company/OU=Enterprise/CN=${HOST}"; \
+	kubectl create secret tls envoy-certs --key certs/cert.key --cert certs/cert.crt --dry-run -o yaml | kubectl apply -f -
 
 curl: ## Test endpoint
 	grpcurl -d '{"values": [1,2,3]}' -proto proto/calculator.proto -insecure -v ${HOST}:${PORT} calculatorpb.Calculator.Add

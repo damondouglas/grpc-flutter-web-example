@@ -7,12 +7,6 @@ build:
     envTemplate:
       template: "{{.IMAGE_NAME}}:{{.TAG}}"
   artifacts:
-  - image: proxy
-    docker:
-      dockerfile: package/proxy/Dockerfile
-    sync:
-      infer:
-        - 'proxy/envoy.yaml'
   - image: server
     docker:
       dockerfile: package/server/Dockerfile

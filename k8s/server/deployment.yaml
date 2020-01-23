@@ -11,12 +11,25 @@ spec:
       labels:
         app: calculator
     spec:
+      volumes:
+        - name: config
+          configMap:
+            name: envoy-conf
+        - name: certs
+          secret:
+            secretName: envoy-certs
       containers:
         - name: proxy
-          image: proxy:1.0
+          image: envoyproxy/envoy:v1.13.0
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 443
+          volumeMounts:
+            - mountPath: /etc/envoy
+              name: config
+            - mountPath: /etc/ssl/envoy
+              name: certs
+
         - name: server
           image: server:1.0
           imagePullPolicy: IfNotPresent
