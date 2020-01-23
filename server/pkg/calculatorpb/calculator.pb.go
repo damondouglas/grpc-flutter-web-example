@@ -110,17 +110,16 @@ func init() {
 func init() { proto.RegisterFile("calculator.proto", fileDescriptor_c686ea360062a8cf) }
 
 var fileDescriptor_c686ea360062a8cf = []byte{
-	// 151 bytes of a gzipped FileDescriptorProto
+	// 136 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x48, 0x4e, 0xcc, 0x49,
 	0x2e, 0xcd, 0x49, 0x2c, 0xc9, 0x2f, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x41, 0x88,
 	0x14, 0x24, 0x29, 0xc9, 0x71, 0xb1, 0x39, 0xe6, 0x15, 0x97, 0xa7, 0x16, 0x09, 0x89, 0x70, 0xb1,
 	0x96, 0x25, 0xe6, 0x94, 0xa6, 0x4a, 0x30, 0x2a, 0x30, 0x6a, 0x30, 0x06, 0x41, 0x38, 0x4a, 0xf2,
 	0x5c, 0xac, 0x9e, 0x79, 0x05, 0xa5, 0x25, 0x42, 0x62, 0x5c, 0x6c, 0x60, 0x91, 0x62, 0x09, 0x46,
-	0x05, 0x66, 0x0d, 0xc6, 0x20, 0x28, 0xcf, 0xa8, 0x92, 0x8b, 0xcb, 0x19, 0x6e, 0xa0, 0x90, 0x11,
+	0x05, 0x66, 0x0d, 0xc6, 0x20, 0x28, 0xcf, 0xc8, 0x81, 0x8b, 0xcb, 0x19, 0x6e, 0xa0, 0x90, 0x11,
 	0x17, 0xb3, 0x63, 0x4a, 0x8a, 0x90, 0xb0, 0x1e, 0xb2, 0x25, 0x7a, 0x60, 0x13, 0xa4, 0x44, 0x50,
-	0x05, 0x21, 0xd6, 0x2a, 0x31, 0x08, 0x99, 0x73, 0x71, 0x04, 0x97, 0x26, 0x95, 0x14, 0x25, 0x26,
-	0x97, 0x90, 0xa4, 0x31, 0x89, 0x0d, 0xec, 0x21, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0x01,
-	0x07, 0x55, 0xbb, 0xe4, 0x00, 0x00, 0x00,
+	0x05, 0x21, 0xd6, 0x2a, 0x31, 0x24, 0xb1, 0x81, 0xdd, 0x65, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff,
+	0x37, 0x55, 0xd2, 0x1b, 0xab, 0x00, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -136,7 +135,6 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type CalculatorClient interface {
 	Add(ctx context.Context, in *Input, opts ...grpc.CallOption) (*Answer, error)
-	Subtract(ctx context.Context, in *Input, opts ...grpc.CallOption) (*Answer, error)
 }
 
 type calculatorClient struct {
@@ -156,19 +154,9 @@ func (c *calculatorClient) Add(ctx context.Context, in *Input, opts ...grpc.Call
 	return out, nil
 }
 
-func (c *calculatorClient) Subtract(ctx context.Context, in *Input, opts ...grpc.CallOption) (*Answer, error) {
-	out := new(Answer)
-	err := c.cc.Invoke(ctx, "/calculatorpb.Calculator/Subtract", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // CalculatorServer is the server API for Calculator service.
 type CalculatorServer interface {
 	Add(context.Context, *Input) (*Answer, error)
-	Subtract(context.Context, *Input) (*Answer, error)
 }
 
 // UnimplementedCalculatorServer can be embedded to have forward compatible implementations.
@@ -177,9 +165,6 @@ type UnimplementedCalculatorServer struct {
 
 func (*UnimplementedCalculatorServer) Add(ctx context.Context, req *Input) (*Answer, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
-}
-func (*UnimplementedCalculatorServer) Subtract(ctx context.Context, req *Input) (*Answer, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Subtract not implemented")
 }
 
 func RegisterCalculatorServer(s *grpc.Server, srv CalculatorServer) {
@@ -204,24 +189,6 @@ func _Calculator_Add_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Calculator_Subtract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Input)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(CalculatorServer).Subtract(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/calculatorpb.Calculator/Subtract",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CalculatorServer).Subtract(ctx, req.(*Input))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _Calculator_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "calculatorpb.Calculator",
 	HandlerType: (*CalculatorServer)(nil),
@@ -229,10 +196,6 @@ var _Calculator_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Add",
 			Handler:    _Calculator_Add_Handler,
-		},
-		{
-			MethodName: "Subtract",
-			Handler:    _Calculator_Subtract_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

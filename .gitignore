@@ -21,17 +21,17 @@
 #.vscode/
 
 # Flutter/Dart/Pub related
-**/doc/api/
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-.pub-cache/
-.pub/
-/build/
+client/**/doc/api/
+client/.dart_tool/
+client/.flutter-plugins
+client/.flutter-plugins-dependencies
+client/.packages
+client/.pub-cache/
+client/.pub/
+client/build/
 
 # Web related
-lib/generated_plugin_registrant.dart
+client/lib/generated_plugin_registrant.dart
 
 # Exceptions to above rules.
-!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+!client/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages

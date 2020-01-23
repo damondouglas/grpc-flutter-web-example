@@ -4,7 +4,6 @@ package calculatorpb;
 
 service Calculator {
     rpc Add(Input) returns (Answer) {}
-    rpc Subtract(Input) returns (Answer) {}
 }
 
 message Answer {
