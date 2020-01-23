@@ -18,13 +18,21 @@ static_resources:
                   - name: service
                     domains:
                       - "*"
+                    cors:
+                      allow_origin_string_match:
+                        prefix: localhost
+                      allow_methods: GET, PUT, DELETE, POST, OPTIONS
+                      allow_headers: keep-alive,user-agent,cache-control,content-type,content-transfer-encoding,x-accept-content-transfer-encoding,x-accept-response-streaming,x-user-agent,x-grpc-web
+                      expose_headers: grpc-status,grpc-message
                     routes:
                       - match:
                           prefix: "/"
                         route:
                           cluster: api_service
               http_filters:
-              - name: envoy.router
+                - name: envoy.cors
+                - name: envoy.grpc_web
+                - name: envoy.router
   clusters:
     - name: api_service
       connect_timeout: 0.25s
