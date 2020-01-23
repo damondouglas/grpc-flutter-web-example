@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+spec:
+  selector:
+    matchLabels:
+      app: calculator
+  template:
+    metadata:
+      labels:
+        app: calculator
+    spec:
+      containers:
+        - name: proxy
+          image: proxy:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+        - name: server
+          image: server:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT
+              value: "9090"
+          ports:
+            - containerPort: 9090
