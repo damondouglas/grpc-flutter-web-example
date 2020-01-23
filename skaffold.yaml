@@ -7,6 +7,19 @@ build:
     envTemplate:
       template: "{{.IMAGE_NAME}}:{{.TAG}}"
   artifacts:
+  - image: flutter
+    docker:
+      dockerfile: package/flutter/Dockerfile
+  - image: client
+    docker:
+      dockerfile: package/client/Dockerfile
+    sync:
+      infer:
+        - 'client/cmd/*.go'
+        - 'client/pubspec.yaml'
+        - 'client/lib/*.dart'
+        - 'client/lib/services/*.dart'
+        - 'client/lib/services/src/generated/*.dart'
   - image: server
     docker:
       dockerfile: package/server/Dockerfile
@@ -19,3 +32,4 @@ deploy:
   kubectl:
     manifests:
     - k8s/server/*.yaml
+    - k8s/client/*.yaml
