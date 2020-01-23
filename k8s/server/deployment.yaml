@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+spec:
+  selector:
+    matchLabels:
+      app: calculator
+  template:
+    metadata:
+      labels:
+        app: calculator
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: envoy-conf
+      containers:
+        - name: proxy
+          image: envoyproxy/envoy:v1.13.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/envoy
+              name: config
+
+        - name: server
+          image: server:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT
+              value: "9090"
+          ports:
+            - containerPort: 9090
