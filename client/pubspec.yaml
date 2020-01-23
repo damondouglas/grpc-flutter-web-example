@@ -12,6 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+dev_dependencies:
+  mockito: ^4.1.1
+
 flutter:
   uses-material-design: true
   assets:
